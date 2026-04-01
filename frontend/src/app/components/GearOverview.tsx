@@ -156,7 +156,7 @@ export default function GearOverview({
                       itemInfoMap={itemInfoMap}
                       enchantInfoMap={enchantInfoMap}
                       gemInfoMap={gemInfoMap}
-                      align="left"
+                      align="right"
                       compact
                     />
                   </div>
@@ -184,7 +184,7 @@ export default function GearOverview({
                     itemInfoMap={itemInfoMap}
                     enchantInfoMap={enchantInfoMap}
                     gemInfoMap={gemInfoMap}
-                    align="left"
+                    align="right"
                     compact
                   />
                   <GearSlotRow
@@ -236,7 +236,7 @@ export function GearSlotRow({
       <div
         className={`flex items-center gap-2 rounded-lg ${compact ? 'px-2 py-1.5' : 'px-2.5 py-2'} ${rtl ? 'flex-row-reverse' : ''}`}
       >
-        <div className={`${compact ? 'h-8 w-8' : 'h-8 w-8'} shrink-0 rounded border border-border bg-white/[0.03]`} />
+        <div className={`${compact ? 'h-10 w-10' : 'h-8 w-8'} shrink-0 rounded border border-border bg-white/[0.03]`} />
         <div className={rtl ? 'text-right' : ''}>
           <p className={`${compact ? 'text-[13px]' : 'text-sm'} text-zinc-200`}>{SLOT_LABELS[slot] || slot}</p>
           <p className={`${compact ? 'text-[13px]' : 'text-sm'} text-zinc-300`}>Empty</p>
@@ -283,7 +283,7 @@ export function GearSlotRow({
       <a
         href={item.item_id > 0 ? getWowheadUrl(item.item_id) : undefined}
         data-wowhead={whData}
-        className={`${compact ? 'h-8 w-8' : 'h-8 w-8'} shrink-0 overflow-hidden rounded border border-border`}
+        className={`${compact ? 'h-10 w-10' : 'h-8 w-8'} shrink-0 overflow-hidden rounded border border-border`}
         title={name}
         target="_blank"
         rel="noopener noreferrer"
@@ -293,8 +293,8 @@ export function GearSlotRow({
         <img
           src={getIconUrl(icon)}
           alt=""
-          width={32}
-          height={32}
+          width={compact ? 40 : 32}
+          height={compact ? 40 : 32}
           className="h-full w-full"
           loading="lazy"
         />

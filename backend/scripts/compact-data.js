@@ -83,7 +83,10 @@ function compactItems(inputPath, outputPath) {
   const data = JSON.parse(fs.readFileSync(inputPath, "utf8"));
 
   // Detect current expansion as the highest expansion number
-  const currentExp = Math.max(...data.map(i => i.expansion || 0));
+  let currentExp = 0;
+  for (const i of data) {
+    if (i.expansion && i.expansion > currentExp) currentExp = i.expansion;
+  }
 
   const result = data.map(item => {
     const hasSources = item.sources && item.sources.length > 0;
