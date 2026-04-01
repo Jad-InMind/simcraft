@@ -79,6 +79,10 @@ export default function TalentPicker() {
     () => [...addonLoadouts, ...customLoadouts],
     [addonLoadouts, customLoadouts]
   );
+  const formatLoadoutName = useCallback(
+    (name: string) => name.replace(/^Saved Loadout:\s*/i, '').trim(),
+    []
+  );
 
   const currentTalent = allLoadouts[selectedLoadoutIdx]?.talentString || '';
 
@@ -208,6 +212,20 @@ export default function TalentPicker() {
     });
   }, []);
 
+  // Seed compare mode with the equipped loadout for faster "compare from current".
+  useEffect(() => {
+    if (!compareMode) return;
+    setCompareIndices((prev) => {
+      if (prev.size > 0) return prev;
+      const activeIdx = allLoadouts.findIndex((l) => l.isActive);
+      const fallbackIdx = selectedLoadoutIdx >= 0 && selectedLoadoutIdx < allLoadouts.length
+        ? selectedLoadoutIdx
+        : 0;
+      const seedIdx = activeIdx >= 0 ? activeIdx : fallbackIdx;
+      return seedIdx >= 0 ? new Set([seedIdx]) : prev;
+    });
+  }, [compareMode, allLoadouts, selectedLoadoutIdx]);
+
   // Sync talentBuilds from compareIndices
   useEffect(() => {
     if (!compareMode) return;
@@ -240,94 +258,96 @@ export default function TalentPicker() {
   return (
     <div className="card overflow-hidden">
       {/* Header bar */}
-      <div className="flex items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-3">
-          <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold/[0.08]">
-            <svg
-              className="h-3.5 w-3.5 text-gold/60"
-              viewBox="0 0 16 16"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M2 2h12v12H2zM5 6h6M5 10h4" />
-            </svg>
+      <div className="px-4 py-3">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-gold/[0.08]">
+              <svg
+                className="h-3.5 w-3.5 text-gold/60"
+                viewBox="0 0 16 16"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="1.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <path d="M2 2h12v12H2zM5 6h6M5 10h4" />
+              </svg>
+            </div>
+            <span className="text-xs font-medium text-zinc-300">Talents</span>
+            {allLoadouts.length >= 2 && (
+              <select
+                value={selectedLoadoutIdx}
+                onChange={(e) => {
+                  const idx = Number(e.target.value);
+                  setSelectedLoadoutIdx(idx);
+                  setSelectedTalent(allLoadouts[idx].talentString);
+                  if (viewMode === 'edit') setViewMode('view');
+                }}
+                className="input-field !w-auto !border-transparent !bg-surface-2 !px-2.5 !py-1 !text-xs"
+              >
+                {allLoadouts.map((l, i) => (
+                  <option key={`${l.name}-${i}`} value={i}>
+                    {formatLoadoutName(l.name)}
+                    {l.isActive ? ' (equipped)' : ''}
+                  </option>
+                ))}
+              </select>
+            )}
           </div>
-          <span className="text-xs font-medium text-zinc-300">Talents</span>
-          {allLoadouts.length >= 2 && (
-            <select
-              value={selectedLoadoutIdx}
-              onChange={(e) => {
-                const idx = Number(e.target.value);
-                setSelectedLoadoutIdx(idx);
-                setSelectedTalent(allLoadouts[idx].talentString);
-                if (viewMode === 'edit') setViewMode('view');
-              }}
-              className="input-field !w-auto !border-transparent !bg-surface-2 !px-2.5 !py-1 !text-[13px]"
-            >
-              {allLoadouts.map((l, i) => (
-                <option key={`${l.name}-${i}`} value={i}>
-                  {l.name}
-                  {l.isActive ? ' (equipped)' : ''}
-                </option>
-              ))}
-            </select>
-          )}
-        </div>
-        <div className="flex items-center gap-1">
-          {viewMode !== 'collapsed' && (
-            <>
-              <button
-                onClick={() => setCompareMode((v) => !v)}
-                className={`rounded-md px-2.5 py-1 text-[13px] transition-all ${
-                  compareMode
-                    ? 'bg-gold/10 font-medium text-gold'
-                    : 'text-zinc-500 hover:bg-surface-2 hover:text-zinc-300'
-                }`}
-              >
-                Compare{talentBuilds.length > 1 ? ` (${talentBuilds.length})` : ''}
-              </button>
-              <button
-                onClick={() => setShowImport((v) => !v)}
-                className={`rounded-md px-2.5 py-1 text-[13px] transition-all ${
-                  showImport
-                    ? 'bg-gold/10 font-medium text-gold'
-                    : 'text-zinc-500 hover:bg-surface-2 hover:text-zinc-300'
-                }`}
-              >
-                Import
-              </button>
-              <button
-                onClick={handleBlankBuild}
-                className="rounded-md px-2.5 py-1 text-[13px] text-zinc-500 transition-all hover:bg-surface-2 hover:text-zinc-300"
-              >
-                Blank
-              </button>
-              {!compareMode && (
+          <div className="flex items-center gap-1">
+            {viewMode !== 'collapsed' && (
+              <>
                 <button
-                  onClick={() => setViewMode((v) => (v === 'edit' ? 'view' : 'edit'))}
-                  className={`rounded-md px-2.5 py-1 text-[13px] transition-all ${
-                    viewMode === 'edit'
+                  onClick={() => setCompareMode((v) => !v)}
+                  className={`rounded-md px-2.5 py-1 text-xs transition-all ${
+                    compareMode
                       ? 'bg-gold/10 font-medium text-gold'
-                      : 'text-zinc-500 hover:bg-surface-2 hover:text-zinc-300'
+                      : 'text-zinc-300 hover:bg-surface-2 hover:text-zinc-300'
                   }`}
                 >
-                  {viewMode === 'edit' ? 'Done' : 'Edit'}
+                  Compare{talentBuilds.length > 1 ? ` (${talentBuilds.length})` : ''}
                 </button>
-              )}
-            </>
-          )}
-          <button
-            onClick={() => {
-              setViewMode((v) => (v === 'collapsed' ? 'view' : 'collapsed'));
-              setShowImport(false);
-            }}
-            className="rounded-md px-2.5 py-1 text-[13px] text-zinc-500 transition-all hover:bg-surface-2 hover:text-zinc-300"
-          >
-            {viewMode !== 'collapsed' ? 'Hide' : 'Show'}
-          </button>
+                <button
+                  onClick={() => setShowImport((v) => !v)}
+                  className={`rounded-md px-2.5 py-1 text-xs transition-all ${
+                    showImport
+                      ? 'bg-gold/10 font-medium text-gold'
+                      : 'text-zinc-300 hover:bg-surface-2 hover:text-zinc-300'
+                  }`}
+                >
+                  Import
+                </button>
+                <button
+                  onClick={handleBlankBuild}
+                  className="rounded-md px-2.5 py-1 text-xs text-zinc-300 transition-all hover:bg-surface-2 hover:text-zinc-300"
+                >
+                  Blank
+                </button>
+                {!compareMode && (
+                  <button
+                    onClick={() => setViewMode((v) => (v === 'edit' ? 'view' : 'edit'))}
+                    className={`rounded-md px-2.5 py-1 text-xs transition-all ${
+                      viewMode === 'edit'
+                        ? 'bg-gold/10 font-medium text-gold'
+                        : 'text-zinc-300 hover:bg-surface-2 hover:text-zinc-300'
+                    }`}
+                  >
+                    {viewMode === 'edit' ? 'Done' : 'Edit'}
+                  </button>
+                )}
+              </>
+            )}
+            <button
+              onClick={() => {
+                setViewMode((v) => (v === 'collapsed' ? 'view' : 'collapsed'));
+                setShowImport(false);
+              }}
+              className="rounded-md px-2.5 py-1 text-xs text-zinc-300 transition-all hover:bg-surface-2 hover:text-zinc-300"
+            >
+              {viewMode !== 'collapsed' ? 'Hide' : 'Show'}
+            </button>
+          </div>
         </div>
       </div>
 
@@ -344,17 +364,17 @@ export default function TalentPicker() {
               }}
               onKeyDown={(e) => e.key === 'Enter' && handleImport()}
               placeholder="Paste talent export string or Wowhead URL..."
-              className="input-field !py-1.5 !text-[13px]"
+              className="input-field !py-1.5 !text-xs"
               autoFocus
             />
             <button
               onClick={handleImport}
-              className="shrink-0 rounded-lg bg-gold/10 px-3 py-1.5 text-[13px] font-medium text-gold transition-colors hover:bg-gold/20"
+              className="shrink-0 rounded-lg bg-gold/10 px-3 py-1.5 text-xs font-medium text-gold transition-colors hover:bg-gold/20"
             >
               Apply
             </button>
           </div>
-          {importError && <p className="mt-1.5 text-[13px] text-red-400">{importError}</p>}
+          {importError && <p className="mt-1.5 text-xs text-red-400">{importError}</p>}
         </div>
       )}
 
@@ -362,16 +382,16 @@ export default function TalentPicker() {
       {compareMode && viewMode !== 'collapsed' && (
         <div className="border-t border-border/50 px-4 py-3">
           <div className="mb-3 flex items-center justify-between">
-            <p className="text-[12px] font-medium uppercase tracking-wider text-muted">
+            <p className="text-xs font-medium uppercase tracking-wider text-muted">
               Select builds to compare
             </p>
             {talentBuilds.length > 1 && (
-              <p className="text-[12px] text-gold/70">
+              <p className="text-xs text-gold/70">
                 {talentBuilds.length} builds &times; gear combos
               </p>
             )}
           </div>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {allLoadouts.map((l, i) => {
               const checked = compareIndices.has(i);
               const status = getBuildStatus(l.talentString, tree);
@@ -388,32 +408,15 @@ export default function TalentPicker() {
                 <button
                   key={`${l.name}-${i}`}
                   onClick={() => toggleCompareLoadout(i)}
-                  className={`group relative overflow-hidden rounded-lg border p-2 text-left transition-all ${
+                  className={`group relative min-h-[168px] overflow-hidden rounded-xl border p-3 text-left transition-all ${
                     checked
                       ? 'border-gold/40 bg-gold/[0.04]'
                       : 'border-border bg-surface hover:border-zinc-600'
                   }`}
                 >
-                  {/* Spec label (only when different from base spec) */}
-                  {loadoutSpecName && baseSpecId != null && loadoutSpecId !== baseSpecId && (
+                  <div className="mb-2 flex items-center justify-center gap-2 text-center">
                     <div
-                      className="absolute left-1.5 top-1.5 z-10 rounded px-1.5 py-px text-[10px] font-bold"
-                      style={{
-                        color: classColorForSpec(loadoutSpecName) ?? '#c4b5fd',
-                        backgroundColor: `${classColorForSpec(loadoutSpecName) ?? '#8b5cf6'}20`,
-                      }}
-                    >
-                      {specDisplayName(loadoutSpecName)}
-                    </div>
-                  )}
-                  {/* Mini tree preview */}
-                  <div className="pointer-events-none h-24">
-                    <TalentTree talentString={l.talentString} mini />
-                  </div>
-                  {/* Label + checkbox */}
-                  <div className="mt-1.5 flex items-center gap-1.5">
-                    <div
-                      className={`flex h-3.5 w-3.5 shrink-0 items-center justify-center rounded border transition-colors ${
+                      className={`flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
                         checked
                           ? 'border-gold bg-gold'
                           : 'border-zinc-600 group-hover:border-zinc-500'
@@ -421,7 +424,7 @@ export default function TalentPicker() {
                     >
                       {checked && (
                         <svg
-                          className="h-2.5 w-2.5 text-black"
+                          className="h-3 w-3 text-black"
                           viewBox="0 0 12 12"
                           fill="none"
                           stroke="currentColor"
@@ -432,11 +435,30 @@ export default function TalentPicker() {
                       )}
                     </div>
                     <span
-                      className={`truncate text-[12px] font-medium ${checked ? 'text-zinc-200' : 'text-zinc-500'}`}
+                      className={`truncate text-sm font-semibold ${checked ? 'text-zinc-100' : 'text-zinc-200'}`}
                     >
-                      {l.name}
-                      {l.isActive ? ' (eq)' : ''}
+                      {formatLoadoutName(l.name)}
+                      {l.isActive ? ' (equipped)' : ''}
                     </span>
+                  </div>
+                  {/* Spec label (only when different from base spec) */}
+                  {loadoutSpecName && baseSpecId != null && loadoutSpecId !== baseSpecId && (
+                    <div
+                      className="absolute left-2 top-10 z-10 rounded px-1.5 py-px text-[10px] font-bold"
+                      style={{
+                        color: classColorForSpec(loadoutSpecName) ?? '#c4b5fd',
+                        backgroundColor: `${classColorForSpec(loadoutSpecName) ?? '#8b5cf6'}20`,
+                      }}
+                    >
+                      {specDisplayName(loadoutSpecName)}
+                    </div>
+                  )}
+                  {/* Mini tree preview */}
+                  <div className="pointer-events-none h-[112px]">
+                    <TalentTree talentString={l.talentString} mini />
+                  </div>
+                  <div className="mt-1 text-center text-xs text-zinc-300">
+                    {status ? `${status.classSpent}/${CLASS_POINTS} class - ${status.specSpent}/${SPEC_POINTS} spec` : ''}
                   </div>
                 </button>
               );

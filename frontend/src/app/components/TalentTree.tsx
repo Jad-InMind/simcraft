@@ -31,9 +31,9 @@ interface TalentTreeProps {
 }
 
 // Node dimensions in SVG units (posX/posY use ~600 unit spacing)
-const NODE_SIZE = 260;
-const ICON_SIZE = 210;
-const PADDING = 200;
+const NODE_SIZE = 304;
+const ICON_SIZE = 245;
+const PADDING = 170;
 
 const GOLD = '#C8992A';
 const DIM = 'rgba(255,255,255,0.15)';
@@ -329,19 +329,19 @@ function TreeSection({
 
   return (
     <div className={compact ? 'w-[180px] shrink-0' : 'min-w-0 flex-1'}>
-      <div className="mb-1 flex items-center justify-center gap-2">
-        <p className="text-center text-[12px] font-medium uppercase tracking-wider text-muted">
+      <div className="-mt-1 mb-0.5 flex items-center justify-center gap-2">
+        <p className="text-center text-xs font-medium uppercase tracking-wider text-muted">
           {label}
         </p>
         {pointsDisplay && (
-          <span className="rounded bg-surface-2 px-1.5 py-0.5 text-[12px] font-bold tabular-nums text-muted">
+          <span className="rounded bg-surface-2 px-1.5 py-0.5 text-xs font-bold tabular-nums text-muted">
             {pointsDisplay}
           </span>
         )}
       </div>
       <svg
         viewBox={`${vbX} ${vbY} ${vbW} ${vbH}`}
-        className={`w-full ${compact ? 'max-h-[320px]' : 'max-h-[420px]'}`}
+        className={`w-full ${compact ? 'max-h-[332px]' : 'max-h-[436px]'}`}
         preserveAspectRatio="xMidYMid meet"
         onContextMenu={editable ? (e) => e.preventDefault() : undefined}
       >
@@ -586,7 +586,7 @@ function MiniTreeSvg({
     minY = Math.min(minY, n.posY);
     maxY = Math.max(maxY, n.posY);
   }
-  const pad = 300;
+  const pad = 250;
   const vbX = minX - pad;
   const vbY = minY - pad;
   const vbW = maxX - minX + pad * 2;
@@ -628,7 +628,7 @@ function MiniTreeSvg({
           entry = node.entries[sel.choiceIndex];
         }
         const icon = entry?.icon;
-        const r = 140;
+        const r = 170;
         return (
           <g key={node.id} opacity={selected ? 1 : 0.25}>
             <clipPath id={`mini-clip-${node.id}`}>
