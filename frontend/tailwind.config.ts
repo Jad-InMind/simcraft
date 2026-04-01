@@ -36,6 +36,9 @@ const config: Config = {
       fontSize: {
         xs: ['0.8125rem', { lineHeight: '1.2rem' }],
       },
+      maxWidth: {
+        '8xl': '88rem',
+      },
       boxShadow: {
         glow: '0 0 20px rgba(212, 168, 67, 0.08)',
         'glow-lg': '0 0 40px rgba(212, 168, 67, 0.12)',
