@@ -245,10 +245,10 @@ export default function TopGearResults({
             <span className="text-sm font-semibold tabular-nums">
               +{Math.round(selectedResult.delta).toLocaleString()}
             </span>
-            <span className="text-xs opacity-60">upgrade</span>
+            <span className="text-sm opacity-70">upgrade</span>
           </div>
         ) : (
-          <p className="mt-4 text-sm text-zinc-500">Current gear is already optimal.</p>
+          <p className="mt-4 text-sm text-zinc-300">Current gear is already optimal.</p>
         )}
       </DpsHeroCard>
 
@@ -268,7 +268,7 @@ export default function TopGearResults({
       {/* Rankings */}
       <div className="card p-5">
         <div className="mb-4 flex items-center justify-between">
-          <p className="text-xs font-medium uppercase tracking-widest text-muted">Rankings</p>
+          <p className="text-sm font-medium uppercase tracking-widest text-muted">Rankings</p>
           <div className="flex items-center gap-3">
             {hasEncounterData && (
               <div className="flex gap-1">
@@ -281,17 +281,18 @@ export default function TopGearResults({
                   <button
                     key={mode}
                     onClick={() => setGroupMode(mode)}
-                    className={`rounded border px-2.5 py-1 text-[13px] font-medium transition-all ${groupMode === mode
-                      ? 'border-white bg-white text-black'
-                      : 'border-border bg-surface-2 text-gray-400 hover:border-gray-500 hover:text-white'
-                      }`}
+                    className={`rounded border px-2.5 py-1.5 text-sm font-medium transition-all ${
+                      groupMode === mode
+                        ? 'border-white bg-white text-black'
+                        : 'border-border bg-surface-2 text-gray-400 hover:border-gray-500 hover:text-white'
+                    }`}
                   >
                     {label}
                   </button>
                 ))}
               </div>
             )}
-            <span className="font-mono text-[13px] text-muted">{results.length} results</span>
+            <span className="font-mono text-sm text-muted">{results.length} results</span>
           </div>
         </div>
 
@@ -300,8 +301,8 @@ export default function TopGearResults({
             {groupedResults.map(([encounter, group]) => (
               <div key={encounter}>
                 <div className="mb-2 flex items-center gap-2 border-b border-border/50 pb-1.5">
-                  <span className="text-[14px] font-semibold text-gray-300">{encounter}</span>
-                  <span className="font-mono text-[12px] text-muted">{group.length} items</span>
+                  <span className="text-[12px] font-semibold text-gray-300">{encounter}</span>
+                  <span className="font-mono text-sm text-muted">{group.length} items</span>
                 </div>
                 <div className="space-y-1">
                   {group.map((result) => (
@@ -384,7 +385,7 @@ function RankedResults({
       {hasMore && (
         <button
           onClick={() => setExpanded(!expanded)}
-          className="mt-2 w-full rounded-lg border border-border bg-surface-2 py-2 text-xs text-zinc-400 transition-all hover:border-zinc-600 hover:text-zinc-200"
+          className="mt-2 w-full rounded-lg border border-border bg-surface-2 py-2.5 text-sm text-zinc-300 transition-all hover:border-zinc-600 hover:text-zinc-100"
         >
           {expanded
             ? 'Show less'
@@ -456,7 +457,7 @@ function ResultRow({
       <div className="relative flex items-center justify-between gap-3 px-3 py-2">
         <div className="flex min-w-0 flex-1 items-center gap-2">
           {rank != null && (
-            <span className="w-5 shrink-0 text-right font-mono text-[12px] tabular-nums text-gray-600">
+            <span className="w-6 shrink-0 text-right font-mono text-sm tabular-nums text-zinc-300">
               {rank}
             </span>
           )}
@@ -467,7 +468,7 @@ function ResultRow({
             if (isEquipped) {
               return (
                 <div className="flex items-center gap-2">
-                  <span className="text-[14px] text-muted">Currently Equipped</span>
+                  <span className="text-sm text-muted">Currently Equipped</span>
                   {talentBadge}
                 </div>
               );
@@ -514,10 +515,10 @@ function ResultRow({
                 ? `+${Math.round(result.delta).toLocaleString()}`
                 : result.delta < 0
                   ? Math.round(result.delta).toLocaleString()
-                  : '—'}
+                  : '-'}
             </span>
             {result.delta !== 0 && baseDps > 0 && (
-              <span className="text-xs opacity-70">
+              <span className="text-sm opacity-70">
                 ({result.delta > 0 ? '+' : ''}
                 {((result.delta / baseDps) * 100).toFixed(1)}%)
               </span>
@@ -555,24 +556,33 @@ function ItemTag({
 
   return (
     <div
-      className={`inline-flex items-center gap-1 rounded px-1.5 py-0.5 ${kept ? 'opacity-40' : 'bg-white/[0.04]'
-        }`}
+      className={`inline-flex items-center gap-1.5 rounded px-2 py-1 ${
+        kept ? 'opacity-40' : 'bg-white/[0.04]'
+      }`}
     >
-      <div className="h-4 w-4 shrink-0 overflow-hidden rounded-sm">
+      <a
+        href={item.item_id > 0 ? getWowheadUrl(item.item_id) : undefined}
+        data-wowhead={whData}
+        className="h-5 w-5 shrink-0 overflow-hidden rounded-sm"
+        title={name}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={(e) => e.preventDefault()}
+      >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={getIconUrl(icon)}
           alt=""
-          width={16}
-          height={16}
+          width={20}
+          height={20}
           className="h-full w-full"
           loading="lazy"
         />
-      </div>
+      </a>
       <a
         href={item.item_id > 0 ? getWowheadUrl(item.item_id) : undefined}
         data-wowhead={whData}
-        className="max-w-[120px] truncate text-[13px] font-medium no-underline"
+        className="max-w-[150px] truncate text-sm font-medium no-underline"
         style={{ color: qc }}
         target="_blank"
         rel="noopener noreferrer"
@@ -586,16 +596,16 @@ function ItemTag({
       </a>
       <span className="text-[11px] text-muted">({slotName})</span>
       {item.upgrade_levels ? (
-        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-emerald-400">
+        <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-emerald-300">
           +{item.upgrade_levels}
         </span>
       ) : item.origin === 'vault' ? (
-        <span className="shrink-0 text-[10px] font-bold uppercase tracking-wider text-amber-400">
+        <span className="shrink-0 text-[11px] font-bold uppercase tracking-wider text-amber-300">
           V
         </span>
       ) : null}
       {enchant?.name && (
-        <span className="max-w-[70px] truncate text-[11px] text-emerald-400/70" title={enchant.name}>
+        <span className="max-w-[120px] truncate text-[11px] text-emerald-300/90" title={enchant.name}>
           {enchant.name}
         </span>
       )}

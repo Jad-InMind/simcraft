@@ -298,15 +298,15 @@ export default function TopGearItemSelector({
     <div className="space-y-4">
       {!headerVisible && (
         <div className="fixed left-0 right-0 top-12 z-40 flex items-center justify-between border-b border-border/50 bg-surface/90 px-4 py-2 backdrop-blur-sm">
-          <p className="text-xs font-medium uppercase tracking-widest text-muted">Select Items</p>
-          <span className={`rounded-md px-2.5 py-1 font-mono text-xs ${comboColorClass}`}>
+          <p className="text-sm font-medium uppercase tracking-widest text-muted">Select Items</p>
+          <span className={`rounded-md px-2.5 py-1 font-mono text-sm ${comboColorClass}`}>
             {comboLabel}
           </span>
         </div>
       )}
       <div ref={headerRef} className="flex items-center justify-between">
-        <p className="text-xs font-medium uppercase tracking-widest text-muted">Select Items</p>
-        <span className={`rounded-md px-2.5 py-1 font-mono text-xs ${comboColorClass}`}>
+        <p className="text-sm font-medium uppercase tracking-widest text-muted">Select Items</p>
+        <span className={`rounded-md px-2.5 py-1 font-mono text-sm ${comboColorClass}`}>
           {comboLabel}
         </span>
       </div>
@@ -314,7 +314,7 @@ export default function TopGearItemSelector({
       <div className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
         {visibleGroups.map(({ group, equipped, alternatives }) => (
           <div key={group.label} className="card space-y-1 p-3.5">
-            <p className="mb-2 text-[13px] font-semibold uppercase tracking-widest text-muted">
+            <p className="mb-2 text-sm font-semibold uppercase tracking-widest text-muted">
               {group.label}
             </p>
 
@@ -408,7 +408,7 @@ function UpgradeButton({
         className={`flex h-5 w-5 items-center justify-center rounded transition-colors ${
           isMenuOpen
             ? 'bg-gold/20 text-gold'
-            : 'text-gray-600 hover:bg-white/[0.05] hover:text-gray-400'
+            : 'text-zinc-300 hover:bg-white/[0.05] hover:text-zinc-100'
         }`}
         title="Add copy at different upgrade level"
       >
@@ -426,9 +426,9 @@ function UpgradeButton({
       {isMenuOpen && (
         <div className="absolute right-0 top-full z-50 mt-1 min-w-[180px] rounded-lg border border-border bg-surface py-1 shadow-xl">
           {loadingUpgrades ? (
-            <div className="px-3 py-2 text-[13px] text-muted">Loading...</div>
+            <div className="px-3 py-2 text-sm text-muted">Loading...</div>
           ) : upgradeOptions.length === 0 ? (
-            <div className="px-3 py-2 text-[13px] text-muted">No options</div>
+            <div className="px-3 py-2 text-sm text-muted">No options</div>
           ) : (
             upgradeOptions.map((opt) => {
               const isCurrent = item.bonus_ids.includes(opt.bonus_id);
@@ -442,14 +442,14 @@ function UpgradeButton({
                     e.preventDefault();
                     onUpgradeSelect(opt);
                   }}
-                  className={`flex w-full items-center justify-between gap-2 px-3 py-1.5 text-left text-[13px] ${
+                  className={`flex w-full items-center justify-between gap-2 px-3 py-1.5 text-left text-sm ${
                     isCurrent
                       ? 'cursor-default text-muted'
                       : 'text-gray-300 hover:bg-white/[0.05] hover:text-white'
                   }`}
                 >
                   <span>{opt.fullName}</span>
-                  <span className="font-mono text-[12px] tabular-nums text-muted">
+                  <span className="font-mono text-sm tabular-nums text-muted">
                     {opt.itemLevel}
                   </span>
                 </button>

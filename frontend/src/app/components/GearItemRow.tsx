@@ -85,7 +85,7 @@ export default function GearItemRow({
         </>
       ) : equipped ? (
         <div className="flex h-5 w-5 shrink-0 items-center justify-center rounded-[3px] bg-white/10">
-          <svg className="h-3 w-3 text-white/40" viewBox="0 0 16 16" fill="none">
+          <svg className="h-3 w-3 text-zinc-300" viewBox="0 0 16 16" fill="none">
             <path
               d="M12 5L6.5 10.5L4 8"
               stroke="currentColor"
@@ -98,43 +98,79 @@ export default function GearItemRow({
       ) : null}
 
       {/* Item icon */}
-      <div
-        className={`h-8 w-8 shrink-0 overflow-hidden rounded ${
-          vault
-            ? 'ring-2 ring-amber-400/70'
-            : catalyst
-              ? 'ring-2 ring-purple-400/70'
-              : 'ring-1 ring-white/5'
-        }`}
-      >
-        <img
-          src={getIconUrl(icon)}
-          alt=""
-          width={32}
-          height={32}
-          className="h-full w-full"
-          loading="lazy"
-        />
-      </div>
+      {href ? (
+        <a
+          href={href}
+          data-wowhead={wowheadData}
+          className={`h-10 w-10 shrink-0 overflow-hidden rounded ${
+            vault
+              ? 'ring-2 ring-amber-400/70'
+              : catalyst
+                ? 'ring-2 ring-purple-400/70'
+                : 'ring-1 ring-white/5'
+          }`}
+          title={name}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={(e) => e.preventDefault()}
+        >
+          <img
+            src={getIconUrl(icon)}
+            alt=""
+            width={40}
+            height={40}
+            className="h-full w-full"
+            loading="lazy"
+          />
+        </a>
+      ) : (
+        <div
+          className={`h-10 w-10 shrink-0 overflow-hidden rounded ${
+            vault
+              ? 'ring-2 ring-amber-400/70'
+              : catalyst
+                ? 'ring-2 ring-purple-400/70'
+                : 'ring-1 ring-white/5'
+          }`}
+        >
+          <img
+            src={getIconUrl(icon)}
+            alt=""
+            width={40}
+            height={40}
+            className="h-full w-full"
+            loading="lazy"
+          />
+        </div>
+      )}
 
       {/* Name + details */}
       <div className="min-w-0 flex-1">
         <a
           href={href}
           data-wowhead={wowheadData}
-          className="block truncate text-[15px] leading-tight no-underline"
-          style={{ color: nameColor }}
+          className="block overflow-hidden text-sm font-semibold leading-tight no-underline"
+          title={name}
           target="_blank"
           rel="noopener noreferrer"
           onClick={href ? (e) => e.preventDefault() : undefined}
+          // eslint-disable-next-line react/forbid-dom-props
+          style={{
+            color: nameColor,
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+          }}
         >
           {name}
         </a>
         {details && details.length > 0 && (
-          <span className="mt-0.5 block truncate text-[13px] text-muted">
+          <span
+            className="mt-0.5 block text-sm leading-tight text-zinc-300"
+          >
             {details.map((p, i) => (
               <span key={i}>
-                {i > 0 && <span className="opacity-40"> · </span>}
+                {i > 0 && <span className="opacity-60"> - </span>}
                 <span className={p.color || ''}>{p.text}</span>
               </span>
             ))}
@@ -142,16 +178,22 @@ export default function GearItemRow({
         )}
       </div>
 
-      {/* Right side: children + ilvl */}
-      {children}
-      {ilevel != null && ilevel > 0 && (
-        <span className="shrink-0 font-mono text-xs tabular-nums text-muted">{ilevel}</span>
+      {/* Right side: actions + ilvl */}
+      {(children || (ilevel != null && ilevel > 0)) && (
+        <div className="ml-auto flex shrink-0 items-center justify-center gap-2 self-center">
+          {children}
+          {ilevel != null && ilevel > 0 && (
+            <span className="inline-flex min-w-[2.5rem] items-center justify-center text-base font-semibold leading-none tracking-tight tabular-nums text-zinc-100">
+              {ilevel}
+            </span>
+          )}
+        </div>
       )}
     </>
   );
 
   // Row styling
-  const baseClass = 'flex items-center gap-2.5 rounded-md px-2.5 py-2 transition-colors';
+  const baseClass = 'flex items-center gap-3 rounded-md px-3.5 py-3 transition-colors';
 
   if (selectable) {
     return (
