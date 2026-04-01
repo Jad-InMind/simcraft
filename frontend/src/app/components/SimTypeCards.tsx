@@ -68,24 +68,26 @@ export default function SimTypeCards() {
           >
             <Link
               href={sim.href}
-              className={`group relative block rounded-xl border px-4 py-3.5 transition-all duration-200 ${
+              className={`group relative block min-h-[98px] rounded-xl border px-4 py-5 transition-all duration-200 ${
                 isActive
                   ? 'border-gold/40 bg-gold/[0.04] shadow-glow'
                   : 'border-border bg-surface hover:border-zinc-600 hover:bg-surface-2'
               }`}
             >
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-4">
                 <div
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg transition-colors ${
-                    isActive ? 'bg-gold/20' : 'bg-gold/[0.06] group-hover:bg-gold/[0.12]'
+                  className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border transition-colors ${
+                    isActive
+                      ? 'border-gold/40 bg-gold/20 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]'
+                      : 'border-gold/20 bg-gold/[0.10] group-hover:border-gold/35 group-hover:bg-gold/[0.16]'
                   }`}
                 >
                   <svg
-                    className={`h-4 w-4 transition-colors ${isActive ? 'text-gold' : 'text-gold/50 group-hover:text-gold'}`}
+                    className={`h-6 w-6 transition-colors ${isActive ? 'text-gold' : 'text-gold/60 group-hover:text-gold'}`}
                     viewBox="0 0 16 16"
                     fill="none"
                     stroke="currentColor"
-                    strokeWidth="1.5"
+                    strokeWidth="1.65"
                     strokeLinecap="round"
                     strokeLinejoin="round"
                   >
@@ -94,15 +96,15 @@ export default function SimTypeCards() {
                 </div>
                 <div className="min-w-0">
                   <h2
-                    className={`text-sm font-semibold transition-colors ${
+                    className={`text-[1.05rem] font-semibold leading-tight transition-colors ${
                       isActive ? 'text-gold' : 'text-zinc-200 group-hover:text-white'
                     }`}
                   >
-                    {sim.label}
-                  </h2>
-                  <p className="hidden truncate text-[13px] text-zinc-500 sm:block">
-                    {sim.description}
-                  </p>
+                      {sim.label}
+                    </h2>
+                    <p className="hidden truncate text-[0.98rem] text-zinc-200 sm:block">
+                      {sim.description}
+                    </p>
                 </div>
               </div>
             </Link>
@@ -124,8 +126,8 @@ export default function SimTypeCards() {
                         }`}
                       >
                         <div className="min-w-0">
-                          <p className="text-[15px] font-medium">{child.label}</p>
-                          <p className="text-[12px] text-zinc-500">{child.description}</p>
+                          <p className="text-sm font-medium">{child.label}</p>
+                          <p className="text-sm text-zinc-300">{child.description}</p>
                         </div>
                       </Link>
                     );
