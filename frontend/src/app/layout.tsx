@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SimProvider>
           <header className="desktop-drag sticky top-0 z-50 border-b border-border/80 bg-bg/90 backdrop-blur-xl">
             <div className="desktop-header:h-11 flex h-11 items-center justify-between">
-              <div className="mx-auto flex w-full max-w-5xl items-center justify-between px-6">
+              <div className="mx-auto flex w-full max-w-[88rem] items-center justify-between px-6">
                 <a
                   href="https://simhammer.com"
                   target="_blank"
@@ -59,20 +59,20 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               <WindowControls />
             </div>
           </header>
-          <main className="mx-auto max-w-5xl px-6 py-8">
+          <main className="mx-auto w-full max-w-[88rem] px-6 py-8">
             <SimTypeCards />
             <SimSharedConfig />
             {children}
           </main>
         </SimProvider>
         <footer className="mt-20 border-t border-border/40 py-8">
-          <p className="mx-auto max-w-md text-center text-[13px] leading-relaxed text-zinc-600">
+          <p className="mx-auto max-w-2xl text-center text-sm leading-relaxed text-zinc-300">
             SimHammer is a pet project held together by coffee, duct tape, and prayers to the RNG
             gods. Bugs are not features — but they might sim higher than your gear. Use at your own
             risk. Not affiliated with Blizzard, Raidbots, or anyone who knows what they&apos;re
             doing.
           </p>
-          <p className="mt-3 text-center text-[12px] text-zinc-600">v{packageJson.version}</p>
+          <p className="mt-3 text-center text-sm text-zinc-300">v{packageJson.version}</p>
         </footer>
       </body>
     </html>

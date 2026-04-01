@@ -44,7 +44,7 @@ export default function WindowControls() {
           className="group flex h-9 w-11 items-center justify-center transition-colors duration-100 hover:bg-white/[0.07]"
         >
           <svg
-            className="h-[10px] w-[10px] text-zinc-500 transition-colors duration-100 group-hover:text-zinc-300"
+            className="h-[10px] w-[10px] text-zinc-300 transition-colors duration-100 group-hover:text-zinc-300"
             viewBox="0 0 10 10"
             fill="none"
             stroke="currentColor"
@@ -60,7 +60,7 @@ export default function WindowControls() {
         >
           {isMaximized ? (
             <svg
-              className="h-[10px] w-[10px] text-zinc-500 transition-colors duration-100 group-hover:text-zinc-300"
+              className="h-[10px] w-[10px] text-zinc-300 transition-colors duration-100 group-hover:text-zinc-300"
               viewBox="0 0 10 10"
               fill="none"
               stroke="currentColor"
@@ -71,7 +71,7 @@ export default function WindowControls() {
             </svg>
           ) : (
             <svg
-              className="h-[10px] w-[10px] text-zinc-500 transition-colors duration-100 group-hover:text-zinc-300"
+              className="h-[10px] w-[10px] text-zinc-300 transition-colors duration-100 group-hover:text-zinc-300"
               viewBox="0 0 10 10"
               fill="none"
               stroke="currentColor"
@@ -87,7 +87,7 @@ export default function WindowControls() {
           className="group flex h-9 w-11 items-center justify-center transition-colors duration-100 hover:bg-[#c42b1c]"
         >
           <svg
-            className="h-[10px] w-[10px] text-zinc-500 transition-colors duration-100 group-hover:text-white"
+            className="h-[10px] w-[10px] text-zinc-300 transition-colors duration-100 group-hover:text-white"
             viewBox="0 0 10 10"
             fill="none"
             stroke="currentColor"

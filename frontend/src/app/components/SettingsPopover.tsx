@@ -5,9 +5,9 @@ import { useSimContext } from './SimContext';
 import { API_URL } from '../lib/api';
 
 const PRESETS = [
-  { label: 'Balanced', pct: 0.3, desc: '30%' },
-  { label: 'Performance', pct: 0.6, desc: '60%' },
-  { label: 'Maximum', pct: 0.9, desc: '90%' },
+  { label: 'Balanced', pct: 0.3 },
+  { label: 'Performance', pct: 0.6 },
+  { label: 'Maximum', pct: 0.9 },
 ] as const;
 
 export default function SettingsPopover() {
@@ -23,6 +23,11 @@ export default function SettingsPopover() {
     if (!desktop) return;
 
     setMaxCombinations(readStoredMaxCombinations());
+    const fallbackThreads = Math.max(1, Number(navigator.hardwareConcurrency) || 8);
+    setMaxThreads(fallbackThreads);
+    if (threads === 0) {
+      setThreads(Math.max(1, Math.round(fallbackThreads * 0.6)));
+    }
 
     fetch(`${API_URL}/health`)
       .then((res) => res.json())
@@ -65,7 +70,7 @@ export default function SettingsPopover() {
     <div className="relative" ref={ref}>
       <button
         onClick={() => setOpen(!open)}
-        className="flex h-7 items-center gap-1.5 rounded-md px-2 text-gray-400 transition-colors hover:bg-white/[0.06] hover:text-gray-200"
+        className="flex h-8 items-center gap-1.5 rounded-md px-2.5 text-zinc-300 transition-colors hover:bg-white/[0.06] hover:text-white"
       >
         <svg
           className="h-3.5 w-3.5"
@@ -79,64 +84,58 @@ export default function SettingsPopover() {
           <circle cx="8" cy="8" r="2" />
           <path d="M8 1v2M8 13v2M1 8h2M13 8h2M3.05 3.05l1.41 1.41M11.54 11.54l1.41 1.41M3.05 12.95l1.41-1.41M11.54 4.46l1.41-1.41" />
         </svg>
-        <span className="text-[13px] font-medium">Settings</span>
+        <span className="text-sm font-medium">Settings</span>
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full z-[60] mt-2 w-80 rounded-xl border border-border bg-surface p-4 shadow-xl shadow-black/40">
-          {/* Desktop-only settings */}
-          {isDesktop && maxThreads > 0 && (
-            <>
-              {/* CPU Threads */}
-              <div>
-                <div className="mb-3 flex items-center justify-between">
-                  <span className="text-[15px] font-medium text-gray-300">CPU Threads</span>
-                  <span className="rounded border border-border bg-surface-2 px-2 py-0.5 font-mono text-xs tabular-nums text-white">
-                    {threads}/{maxThreads}
+        <div className="absolute right-0 top-full z-[60] mt-2 w-[18rem] rounded-xl border border-border bg-surface p-3.5 shadow-xl shadow-black/40">
+          <div className="mb-3 flex items-center justify-between">
+            <span className="text-sm font-medium text-zinc-200">CPU Threads</span>
+            <span className="rounded border border-border bg-surface-2 px-2 py-0.5 font-mono text-sm tabular-nums text-white">
+              {threads}/{maxThreads}
+            </span>
+          </div>
+          <div className="flex gap-1.5">
+            {PRESETS.map((preset, idx) => {
+              const t = Math.max(1, Math.round(maxThreads * preset.pct));
+              const active = selectedIdx === idx;
+              return (
+                <button
+                  key={preset.label}
+                  onClick={() => setThreads(t)}
+                  className={`flex-1 rounded-lg border px-2 py-1.5 text-center transition-all ${
+                    active
+                      ? 'border-white bg-white text-black'
+                      : 'border-border bg-surface-2 text-zinc-300 hover:border-zinc-500 hover:text-white'
+                  }`}
+                >
+                  <span className="block text-[12px] font-semibold leading-tight">{preset.label}</span>
+                  <span className={`mt-0.5 block text-[11px] leading-tight ${active ? 'text-zinc-700' : 'text-zinc-300'}`}>
+                    {t} threads
                   </span>
-                </div>
-                <div className="flex gap-1.5">
-                  {PRESETS.map((preset, idx) => {
-                    const t = Math.max(1, Math.round(maxThreads * preset.pct));
-                    const active = selectedIdx === idx;
-                    return (
-                      <button
-                        key={preset.label}
-                        onClick={() => setThreads(t)}
-                        className={`flex-1 rounded-lg border px-2 py-2 text-center transition-all ${
-                          active
-                            ? 'border-white bg-white text-black'
-                            : 'border-border bg-surface-2 text-gray-400 hover:border-gray-500 hover:text-white'
-                        }`}
-                      >
-                        <span className="block text-[14px] font-medium">{preset.label}</span>
-                        <span className="mt-0.5 block text-[12px] text-gray-600">{t} threads</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
+                </button>
+              );
+            })}
+          </div>
 
-              {/* Max Combinations */}
-              <div className="mt-4 border-t border-border pt-4">
-                <div className="flex items-center justify-between">
-                  <span className="text-[15px] font-medium text-gray-300">Max Gear Combos</span>
-                  <input
-                    type="number"
-                    min={10}
-                    max={100000}
-                    step={50}
-                    value={maxCombinations ?? 500}
-                    onChange={(e) => {
-                      const n = parseInt(e.target.value, 10);
-                      if (Number.isFinite(n) && n > 0) setMaxCombinations(n);
-                    }}
-                    className="w-20 rounded border border-border bg-surface-2 px-2 py-1 text-center font-mono text-xs tabular-nums text-white [appearance:textfield] focus:border-gold/50 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
-                  />
-                </div>
-              </div>
-            </>
-          )}
+          {/* Max Combinations */}
+          <div className="mt-3.5 border-t border-border pt-3.5">
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-zinc-200">Max Gear Combos</span>
+              <input
+                type="number"
+                min={10}
+                max={100000}
+                step={50}
+                value={maxCombinations ?? 500}
+                onChange={(e) => {
+                  const n = parseInt(e.target.value, 10);
+                  if (Number.isFinite(n) && n > 0) setMaxCombinations(n);
+                }}
+                className="w-20 rounded border border-border bg-surface-2 px-2 py-1 text-center font-mono text-sm tabular-nums text-white [appearance:textfield] focus:border-gold/50 focus:outline-none [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+              />
+            </div>
+          </div>
         </div>
       )}
     </div>

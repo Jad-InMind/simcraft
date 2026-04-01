@@ -75,7 +75,7 @@ export default function UpdateChecker() {
         </div>
         <div className="min-w-0 flex-1">
           <p className="text-sm font-medium text-gray-200">Update available</p>
-          <p className="mt-0.5 text-xs text-gray-400">SimHammer v{version} is ready to install.</p>
+          <p className="mt-0.5 text-sm text-zinc-300">SimHammer v{version} is ready to install.</p>
           {error && <p className="mt-1 text-xs text-red-400">{error}</p>}
           <div className="mt-3 flex gap-2">
             <button

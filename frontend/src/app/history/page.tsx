@@ -85,7 +85,7 @@ function SimRow({ sim, compact }: { sim: JobSummary; compact?: boolean }) {
         className={`h-1.5 w-1.5 shrink-0 rounded-full ${STATUS_COLORS[sim.status] || STATUS_COLORS.pending}`}
       />
       {!compact && (
-        <span className="shrink-0 rounded-md bg-gold/[0.08] px-2 py-0.5 text-[12px] font-medium text-gold">
+        <span className="shrink-0 rounded-md bg-gold/[0.08] px-2 py-0.5 text-xs font-medium text-gold">
           {SIM_TYPE_LABELS[sim.sim_type] || sim.sim_type}
         </span>
       )}
@@ -93,14 +93,14 @@ function SimRow({ sim, compact }: { sim: JobSummary; compact?: boolean }) {
         {sim.player_name ? (
           <span className={`block truncate text-zinc-200 ${compact ? 'text-xs' : 'text-sm'}`}>
             {sim.player_name}
-            {sim.player_class && <span className="ml-1.5 text-zinc-500">{sim.player_class}</span>}
+            {sim.player_class && <span className="ml-1.5 text-zinc-300">{sim.player_class}</span>}
           </span>
         ) : sim.status === 'failed' ? (
           <span className={`block truncate text-red-400/80 ${compact ? 'text-xs' : 'text-sm'}`}>
             {sim.error_message || 'Failed'}
           </span>
         ) : (
-          <span className={`block truncate text-zinc-500 ${compact ? 'text-xs' : 'text-sm'}`}>
+          <span className={`block truncate text-zinc-300 ${compact ? 'text-xs' : 'text-sm'}`}>
             {sim.status === 'running' ? 'Simulating...' : 'Pending...'}
           </span>
         )}
@@ -108,15 +108,15 @@ function SimRow({ sim, compact }: { sim: JobSummary; compact?: boolean }) {
       <span
         className={`shrink-0 text-right font-mono tabular-nums text-zinc-200 ${compact ? 'w-16 text-xs' : 'w-20 text-sm'}`}
       >
-        {sim.dps ? Math.round(sim.dps).toLocaleString() : '—'}
+        {sim.dps ? Math.round(sim.dps).toLocaleString() : '-'}
       </span>
       <span
-        className={`hidden shrink-0 text-right text-zinc-500 sm:block ${compact ? 'w-12 text-[12px]' : 'w-20 text-[13px]'}`}
+        className={`hidden shrink-0 text-right text-zinc-300 sm:block ${compact ? 'w-12 text-xs' : 'w-20 text-xs'}`}
       >
         {FIGHT_STYLE_SHORT[sim.fight_style] || sim.fight_style}
       </span>
       <span
-        className={`shrink-0 text-right text-zinc-600 ${compact ? 'w-12 text-[12px]' : 'w-14 text-[13px]'}`}
+        className={`shrink-0 text-right text-zinc-300 ${compact ? 'w-12 text-sm' : 'w-14 text-sm'}`}
       >
         {timeAgo(sim.created_at)}
       </span>
@@ -189,10 +189,10 @@ function BatchGroup({ entry }: { entry: Extract<HistoryEntry, { type: 'batch' }>
             {simType} &middot; {entry.sims.length} Scenarios
           </span>
           {first?.player_name && (
-            <span className="ml-2 text-xs text-zinc-500">{first.player_name}</span>
+            <span className="ml-2 text-xs text-zinc-300">{first.player_name}</span>
           )}
         </div>
-        <span className="shrink-0 rounded-md bg-gold/[0.08] px-2 py-0.5 text-[12px] font-medium text-gold">
+        <span className="shrink-0 rounded-md bg-gold/[0.08] px-2 py-0.5 text-xs font-medium text-gold">
           {simType}
         </span>
         {bestDps > 0 && (
@@ -200,7 +200,7 @@ function BatchGroup({ entry }: { entry: Extract<HistoryEntry, { type: 'batch' }>
             {Math.round(bestDps).toLocaleString()}
           </span>
         )}
-        <span className="w-14 shrink-0 text-right text-[13px] text-zinc-600">
+        <span className="w-14 shrink-0 text-right text-sm text-zinc-300">
           {timeAgo(first?.created_at)}
         </span>
       </div>

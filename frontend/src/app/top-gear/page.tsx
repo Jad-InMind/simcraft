@@ -247,8 +247,6 @@ export default function TopGearPage() {
           : 'Paste your SimC addon export above to see gear options.'}
       </p>
     );
-  } else {
-    console.log(resolved);
   }
 
   return (
@@ -268,10 +266,10 @@ export default function TopGearPage() {
             />
           </div>
           <div>
-            <span className="text-[15px] font-medium text-gray-300 transition-colors group-hover:text-white">
+            <span className="text-sm font-medium text-zinc-200 transition-colors group-hover:text-white">
               Copy Enchants
             </span>
-            <p className="text-[13px] text-gray-600">Apply equipped enchants to alternatives</p>
+            <p className="text-sm text-zinc-300">Apply equipped enchants to alternatives</p>
           </div>
         </label>
         <label className="group flex flex-1 cursor-pointer items-center gap-3">
@@ -288,10 +286,10 @@ export default function TopGearPage() {
             />
           </div>
           <div>
-            <span className="text-[15px] font-medium text-gray-300 transition-colors group-hover:text-white">
+            <span className="text-sm font-medium text-zinc-200 transition-colors group-hover:text-white">
               Sim Highest Upgrade
             </span>
-            <p className="text-[13px] text-gray-600">Simulate all items at max upgrade level</p>
+            <p className="text-sm text-zinc-300">Simulate all items at max upgrade level</p>
           </div>
         </label>
         {catalystCharges != null && catalystCharges > 0 && (
@@ -309,10 +307,10 @@ export default function TopGearPage() {
               />
             </div>
             <div className="flex-1 cursor-pointer" onClick={() => setCatalyst(!catalyst)}>
-              <span className="text-[15px] font-medium text-gray-300 transition-colors group-hover:text-white">
+              <span className="text-sm font-medium text-zinc-200 transition-colors group-hover:text-white">
                 Revival Catalyst
               </span>
-              <p className="text-[13px] text-gray-600">Generate tier alternatives</p>
+              <p className="text-sm text-zinc-300">Generate tier alternatives</p>
             </div>
             {catalyst && (
               <div className="flex items-center gap-1.5">
@@ -325,9 +323,9 @@ export default function TopGearPage() {
                     const v = parseInt(e.target.value, 10);
                     if (!isNaN(v) && v >= 0) setCatalystCharges(v);
                   }}
-                  className="input-field !w-12 !px-1.5 !py-0.5 text-center !text-[13px]"
+                  className="input-field !w-14 !px-1.5 !py-0.5 text-center !text-sm"
                 />
-                <span className="text-[13px] text-gray-500">charges</span>
+                <span className="text-sm text-zinc-300">charges</span>
               </div>
             )}
           </div>
