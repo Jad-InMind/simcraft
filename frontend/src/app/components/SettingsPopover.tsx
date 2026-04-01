@@ -62,6 +62,8 @@ export default function SettingsPopover() {
     return () => document.removeEventListener('mousedown', handleClick);
   }, [open]);
 
+  if (!isDesktop || !maxThreads) return null;
+
   const selectedIdx = PRESETS.findIndex(
     (p) => maxThreads > 0 && Math.max(1, Math.round(maxThreads * p.pct)) === threads
   );
